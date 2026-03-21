@@ -4,4 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#1E90FF</color>
     <color name="b_0">#000000</color>
+    <color name="grey">#AEAFB4</color>
+    <color name="switch_thumb_active_color">#3772E7</color>
+    <color name="switch_thumb_inactive_color">#AEAFB4</color>
 </resources>
