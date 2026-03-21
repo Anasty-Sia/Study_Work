@@ -1,138 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    style="@style/activity_settings"
     android:id="@+id/settings_activity">
 
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/settings_back"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         app:navigationIcon ="@drawable/ic_button_back_24"
         app:titleTextAppearance="@style/content"
         app:contentInsetStartWithNavigation="12dp"
-        app:title="@string/settings"
-        app:titleTextColor="@color/black">
+        app:title="@string/settings">
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp"
-        android:orientation="horizontal">
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        style="@style/SettingsSwitchStyle"
+        android:text="@string/dark_theme" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginVertical="21dp"
-            android:layout_marginStart="16dp"
-            android:text="@string/dark_theme"
-            android:textColor="@color/b_0"
-            android:textSize="16sp">
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/SettingsMaterialTextView"
+        android:text="@string/share_app"
+        android:drawableEnd="@drawable/ic_share_24">
+    </com.google.android.material.textview.MaterialTextView>
 
-        </TextView>
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/SettingsMaterialTextView"
+        android:text="@string/write_support"
+        android:drawableEnd="@drawable/ic_support_24">
+    </com.google.android.material.textview.MaterialTextView>
 
-        <Switch
-            android:id="@+id/switch_btb"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp">
-        </Switch>
-
-    </LinearLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="21dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_gravity="start"
-            android:text="@string/share_app"
-            android:textColor="@color/b_0"
-            android:textSize="16sp">
-
-        </TextView>
-
-        <ImageView
-            android:id="@+id/share_btb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="12dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_share_24">
-
-        </ImageView>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginVertical="21dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/write_support"
-            android:textColor="@color/b_0"
-            android:textSize="16sp">
-
-        </TextView>
-
-        <ImageView
-            android:id="@+id/support_btb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="12dp"
-            android:layout_gravity="end"
-            android:src="@drawable/ic_support_24">
-        </ImageView>
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="61dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="21dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_gravity="start"
-            android:text="@string/user_agreement"
-            android:textColor="@color/b_0"
-            android:textSize="16sp">
-
-        </TextView>
-
-        <ImageView
-            android:id="@+id/arrow_btb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:layout_marginTop="19dp"
-            android:layout_marginEnd="12dp"
-            android:layout_gravity="end"
-            android:src="@drawable/ic_arrow_forward_24">
-        </ImageView>
-    </FrameLayout>
-
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/SettingsMaterialTextView"
+        android:text="@string/user_agreement"
+        android:drawableEnd="@drawable/ic_arrow_forward_24">
+    </com.google.android.material.textview.MaterialTextView>
 
 </LinearLayout>
