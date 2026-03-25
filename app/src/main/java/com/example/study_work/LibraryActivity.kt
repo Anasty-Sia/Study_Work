@@ -1,6 +1,5 @@
 package com.example.study_work
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -23,8 +22,7 @@ class LibraryActivity : AppCompatActivity() {
         val mainBack = findViewById<MaterialToolbar>(R.id.library_back)
 
         mainBack.setOnClickListener {
-            val mainIntent = Intent(this, MainActivity::class.java)
-            startActivity(mainIntent)
+           finish()
         }
 
 

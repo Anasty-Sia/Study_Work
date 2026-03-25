@@ -8,7 +8,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/blue</item>
+        <item name="android:background">@color/black</item>
 
     </style>
 
@@ -16,7 +16,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:background">@color/white</item>
+        <item name="android:background">@color/black</item>
 
     </style>
 
@@ -60,10 +60,10 @@
         <item name="android:paddingStart">16dp</item>
         <item name="android:textSize">16sp</item>
         <item name="android:paddingEnd">6dp</item>
-        <item name="android:textColor">@color/b_0</item>
         <item name="android:paddingVertical">21dp</item>
         <item name="thumbTint">@color/switch_thumb_color</item>
         <item name="trackTint">@color/switch_track_color</item>
+        <item name="android:textColor">@color/white</item>
         <item name="thumbRadius">10dp</item>
         <item name="trackHeight">14dp</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
@@ -77,7 +77,7 @@
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">12dp</item>
         <item name="android:paddingVertical">21dp</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
 
     </style>

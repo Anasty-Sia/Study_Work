@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/activity_settings"
+    android:theme="@style/Base.Theme.Study_Work"
     android:id="@+id/settings_activity">
 
 
@@ -12,6 +13,7 @@
         app:navigationIcon ="@drawable/ic_button_back_24"
         app:titleTextAppearance="@style/content"
         app:contentInsetStartWithNavigation="12dp"
+        android:fontFamily = "@font/ys_display_medium"
         app:title="@string/settings">
 
     </com.google.android.material.appbar.MaterialToolbar>
@@ -21,18 +23,21 @@
         android:text="@string/dark_theme" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/btn_share_app"
         style="@style/SettingsMaterialTextView"
         android:text="@string/share_app"
         android:drawableEnd="@drawable/ic_share_24">
     </com.google.android.material.textview.MaterialTextView>
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/btn_write_support"
         style="@style/SettingsMaterialTextView"
         android:text="@string/write_support"
         android:drawableEnd="@drawable/ic_support_24">
     </com.google.android.material.textview.MaterialTextView>
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/btn_user_agreement"
         style="@style/SettingsMaterialTextView"
         android:text="@string/user_agreement"
         android:drawableEnd="@drawable/ic_arrow_forward_24">
