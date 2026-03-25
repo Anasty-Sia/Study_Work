@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/Base.Theme.Study_Work"
     android:id="@+id/activity_library">
 
 
@@ -14,8 +15,10 @@
         app:navigationIcon ="@drawable/ic_button_back_24"
         app:titleTextAppearance="@style/content"
         app:contentInsetStartWithNavigation="12dp"
+        android:fontFamily = "@font/ys_display_medium"
         app:title="@string/library"
-        app:titleTextColor="@color/black">
+        app:titleTextColor="?attr/colorPrimary"
+        >
 
     </com.google.android.material.appbar.MaterialToolbar>
 
