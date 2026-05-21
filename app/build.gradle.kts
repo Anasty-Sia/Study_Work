@@ -49,4 +49,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //Glide
+    implementation("com.google.android.material:material:1.13.0")
+    implementation("com.github.bumptech.glide:glide:5.0.7")
+    annotationProcessor("com.github.bumptech.glide:compiler:5.0.7")
 }

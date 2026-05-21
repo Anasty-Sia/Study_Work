@@ -25,8 +25,5 @@ class LibraryActivity : AppCompatActivity() {
            finish()
         }
 
-
-
-
     }
 }
