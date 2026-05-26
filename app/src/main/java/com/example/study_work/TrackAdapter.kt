@@ -5,8 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class TrackAdapter(
-    private var tracks: List<Track>
+private var  tracks: List<Track>
 ) : RecyclerView.Adapter<TrackViewHorder>() {
+
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHorder {
@@ -22,7 +23,8 @@ class TrackAdapter(
         return tracks.size
     }
 
-   fun updateTracks(newTrack: List<Track>) {
+
+    fun updateTracks(newTrack: List<Track>) {
         tracks = newTrack
         notifyDataSetChanged()
     }

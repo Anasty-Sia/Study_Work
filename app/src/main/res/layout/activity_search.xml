@@ -31,6 +31,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start|center_vertical"
@@ -54,7 +55,9 @@
             android:lines="1"
             android:textColor="@color/black"
             android:textColorHint="@color/grey"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/clearIcon"
@@ -71,16 +74,81 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/emptyResultsIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_nothing_found_120">
+
+        </ImageView>
+
 
     <TextView
-        android:id="@+id/emplyText"
+        android:id="@+id/emptyResultsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="35dp"
-        android:text="Ничего не найдено"
-        android:textSize="20dp"
-        android:visibility="gone"></TextView>
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16sp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        tools:text="@string/nothing_found"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="19sp">
+    </TextView>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/errorResultsIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_internet_120">
+
+        </ImageView>
+
+
+        <TextView
+            android:id="@+id/errorResultsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16sp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            tools:text="@string/something_went_wrong"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="19sp">
+        </TextView>
+
+        <Button
+            android:id="@+id/refresh_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="@string/retry">
+
+        </Button>
+    </LinearLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView

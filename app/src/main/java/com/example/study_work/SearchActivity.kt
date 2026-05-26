@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -15,15 +16,34 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
+    private val iTunesBaseUrl = "https://itunes.apple.com"
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(iTunesBaseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val iTunesService = retrofit.create(ITunesApi::class.java)
+
     private var searchText: String = ""
     private lateinit var inputEditText: EditText
-    private lateinit var clearButton : ImageView
-    private lateinit var allTracks: List<Track>
-    private lateinit var trackAdapter: TrackAdapter
+    private lateinit var errorView: View
+    private lateinit var emptyView: View
 
+    private lateinit var refreshButton: View
+    private lateinit var clearButton: ImageView
+    private lateinit var recyclerView: RecyclerView
+
+    private val tracks = ArrayList<Track>()
+    private lateinit var trackAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,45 +55,26 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.tracksList)
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
-
-        allTracks = listOf(
-            Track("Smells Like Teen Spirit","Nirvana","5:01"," https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track("Billie Jean","Michael Jackso"," 4:35","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-            Track("Smells Like Teen Spirit","Nirvana","5:01"," https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track("Billie Jean","Michael Jackso"," 4:35","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-            Track("Smells Like Teen Spirit","Nirvana","5:01"," https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track("Billie Jean","Michael Jackso"," 4:35","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-            Track("Smells Like Teen Spirit","Nirvana","5:01"," https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track("Billie Jean","Michael Jackso"," 4:35","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-            Track("Smells Like Teen Spirit","Nirvana","5:01"," https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track("Billie Jean","Michael Jackso"," 4:35","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-            Track("Smells Like Teen Spirit","Nirvana","5:01"," https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"),
-            Track("Billie Jean","Michael Jackso"," 4:35","https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"),
-        )
-
-
-        trackAdapter = TrackAdapter(allTracks)
-        recyclerView.adapter = trackAdapter
-
-
+        recyclerView = findViewById(R.id.tracksList)
 
         inputEditText = findViewById(R.id.inputEditText)
-        val emptyText = findViewById<TextView>(R.id.emplyText)
         clearButton = findViewById(R.id.clearIcon)
-
+        emptyView = findViewById(R.id.emptyView)
+        errorView = findViewById(R.id.errorView)
+        refreshButton = findViewById(R.id.refresh_button)
 
         val mainBack = findViewById<MaterialToolbar>(R.id.search_back)
-
         mainBack.setOnClickListener {
             finish()
         }
+
+        setupViews()
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
             hideKeyboard(inputEditText)
         }
+
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -84,26 +85,8 @@ class SearchActivity : AppCompatActivity() {
                 val input = s.toString()
                 searchText = input
 
-                val filteredTracks  = if (input.isEmpty()){
-                    emptyList()
-                }else {
-                    allTracks.filter { track ->
-                        track.trackName.contains(searchText, ignoreCase = true) ||
-                                track.artistName.contains(searchText, ignoreCase = true)
-                    }
-                }
-
-                if (filteredTracks.isEmpty()){
-                    recyclerView.visibility = View.GONE
-                    emptyText.visibility = View.VISIBLE
-                }else {
-                    recyclerView.visibility = View.VISIBLE
-                    emptyText.visibility = View.GONE
-                }
-                trackAdapter.updateTracks(filteredTracks)
-
-
                 clearButton.visibility = clearButtonVisibility(s)
+                resetSearchState()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -113,7 +96,134 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.addTextChangedListener(simpleTextWatcher)
         inputEditText.setText(searchText)
 
+        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                performSearch(searchText)
+                hideKeyboard(inputEditText)
+                true
+            }
+            false
+        }
 
+    }
+
+    private fun setupViews() {
+        trackAdapter = TrackAdapter(emptyList())
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = trackAdapter
+
+        refreshButton.setOnClickListener {
+            println("Нажата кнопка обновить, текст: ${inputEditText.text}")
+            if (searchText.isNotEmpty()) {
+                refreshButton.isEnabled = false
+                performSearch(searchText)
+                refreshButton.postDelayed({ refreshButton.isEnabled = true }, 1000)
+            } else {
+                inputEditText.requestFocus()
+            }
+        }
+    }
+
+
+    private fun performSearch(searchText: String) {
+        if (searchText.isBlank()) {
+            resetSearchState()
+            return
+        }
+
+        search()
+    }
+
+
+    private fun showResult(tracks: List<Track>) {
+        emptyView.visibility = View.GONE
+        errorView.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+
+        trackAdapter.updateTracks(tracks)
+
+    }
+
+
+    private fun showEmptyState(messageRes: Int, iconRes: Int) {
+        emptyView.visibility = View.VISIBLE
+        errorView.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+
+        emptyView.findViewById<TextView>(R.id.emptyResultsText).text = getString(messageRes)
+        emptyView.findViewById<ImageView>(R.id.emptyResultsIcon).setImageResource(iconRes)
+    }
+
+    private fun showErrorState(messageRes: Int, iconRes: Int, show: Boolean) {
+        if (show) {
+            emptyView.visibility = View.GONE
+            errorView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+
+            errorView.findViewById<TextView>(R.id.errorResultsText).text = getString(messageRes)
+            errorView.findViewById<ImageView>(R.id.errorResultsIcon).setImageResource(iconRes)
+
+        } else {
+            errorView.visibility = View.GONE
+        }
+
+    }
+
+    private fun resetSearchState() {
+        emptyView.visibility = View.GONE
+        errorView.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+        trackAdapter.updateTracks(emptyList())
+    }
+
+
+    private fun search() {
+        println("search() вызван")
+        if (inputEditText.text.isNotEmpty()) {
+            iTunesService.search(inputEditText.text.toString())
+                .enqueue(object : Callback<TracksResponse> {
+                    override fun onResponse(
+                        call: Call<TracksResponse>,
+                        response: Response<TracksResponse>
+                    ) {
+                        if (response.code() == 200) {
+                            println("Код ответа: ${response.code()}")
+                            println("Количество треков: ${response.body()?.results?.size}")
+                            tracks.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                tracks.addAll(response.body()?.results!!)
+                                trackAdapter.notifyDataSetChanged()
+                            }
+                            if (tracks.isEmpty()) {
+                                showEmptyState(
+                                    R.string.nothing_found,
+                                    R.drawable.ic_nothing_found_120
+                                )
+
+                            } else {
+                                showResult(tracks)
+                            }
+                        } else {
+                            showErrorState(
+                                R.string.something_went_wrong,
+                                R.drawable.ic_internet_120,
+                                true
+                            )
+                        }
+                        refreshButton.isEnabled = true
+                    }
+
+                    override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                        showErrorState(
+                            R.string.something_went_wrong,
+                            R.drawable.ic_internet_120,
+                            true
+                        )
+                        refreshButton.isEnabled = true
+                    }
+
+                })
+        }
 
     }
 
@@ -122,6 +232,7 @@ class SearchActivity : AppCompatActivity() {
             View.GONE
         } else {
             View.VISIBLE
+
         }
     }
 
@@ -132,15 +243,16 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        searchText = savedInstanceState.getString(SEARCH_TEXT_KEY,"")
+        searchText = savedInstanceState.getString(SEARCH_TEXT_KEY, "")
         inputEditText.setText(searchText)
     }
 
-    private  fun hideKeyboard(v: View){
+    private fun hideKeyboard(v: View) {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0)
 
     }
+
     companion object {
         private const val SEARCH_TEXT_KEY = "SEARCH_TEXT"
     }
